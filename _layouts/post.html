@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en-us">
+<head>
+  <title>{{ page.title }}</title>
+  <meta charset="utf-8">
+  <meta name="Description" content="{{ page.description }}">
+  
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">  
+  <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="alternate" type="application/atom+xml" title="Notes on Labor Data " href="/feed.xml" />
+
+  <!-- Twitter metadata -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:site" content="@forestgregg">
+  <meta name="twitter:creator" content="@forestgregg">
+  {% if page.title %}
+    <meta name="twitter:title" content="{{ page.title }}">
+  {% else %}
+    <meta name="twitter:title" content="{{ site.title }}">
+  {% endif %}
+  {% if page.url %}
+    <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+  {% endif %}
+  {% if page.description %}
+    <meta name="twitter:description" content="{{ page.description }}">
+  {% endif %}
+  
+</head>
+<body>
+  <div style="float: left">Notes on Labor Data by <a href="https://mastodon.social/@fgregg">Forest Gregg</a></div><div style="float: right"><a href="/archive.html">Archive</a></div><div style="clear: both;"></div>
+  <hr />
+  <h1>{{ page.title }}</h1>
+  <p class="text-muted">{{ page.date | date: '%B %d, %Y' }}</p>
+  {{ content }}
+
+  <hr />
+    <p>Subscribe to get Notes on Labor Data as an email newsletter.</p>  
+
+  <form
+
+  action="https://buttondown.email/api/emails/embed-subscribe/labordata"
+  method="post"
+  target="popupwindow"
+  onsubmit="window.open('https://buttondown.email/labordata', 'popupwindow')"
+  class="embeddable-buttondown-form"
+>
+  <label for="bd-email">Enter your email</label>
+  <input type="email" name="email" id="bd-email" />
+  <input type="submit" value="Subscribe" />
+</form>
+  
+
+</body>
