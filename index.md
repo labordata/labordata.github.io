@@ -1,6 +1,6 @@
 ---
 layout: default
-title: Bunkum
+title: Notes on Labor Data
 ---
 
 <h1>{{ site.posts.first.title }}</h1>
