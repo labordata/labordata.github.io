@@ -1,5 +1,5 @@
 ---
-title: Parsing Labor Union Names
+title: Parsing Labor Union Names / UNICORE
 layout: post
 description: Name parsing and a few other pieces.
 ---
