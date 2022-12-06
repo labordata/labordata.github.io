@@ -6,7 +6,7 @@ description: Name parsing and a few other pieces.
 
 ## Parsing Local Union Names, Probabilistically
 In order to link up data about unions between and within data sets,
-I'm starting to build a link local unions to their entries in the [in
+I'm starting to build a tool to link local unions to their entries in the [in
 the LM
 data](https://labordata.bunkum.us/opdr?sql=select+f_num%2C+union_name%2C+aff_abbr%2C+desig_name%2C+desiq_pre%2C+desig_num%2C+desig_suf+from+lm_data+group+by+rpt_id%3B+). To
 help with the linking, it's useful to try to parse the parts of a
@@ -50,7 +50,7 @@ In particular, I'm curious if the UNICORE data has identifiers for firms
 and establishments that could be used by outside researchers. 
 
 I'm going to be doing more and more linking of employers, and when I
-do that, I'd love to use existing identifiers for firms and
+do that, I'd like to use existing identifiers for firms and
 establishments so that folks can easily link my work to other
 datasets. Right now, there is not really a public dataset of employer
 identifiers. 
