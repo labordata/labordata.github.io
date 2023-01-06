@@ -6,16 +6,16 @@ description: Starting on the State Labor FOIA Board Project
 
 State and local government workers make up about [40% of the total
 unionized workforce](https://www.bls.gov/news.release/pdf/union2.pdf)
-in the Unitd States, but we don't have access to current data
+in the United States, but we don't have access to current data
 about organizing in these sectors.
 
-For these state and local governments, the only official data sources
+For state and local governments, the only official data sources
 for information about petitions for election, certification elections,
 and representation certifications are the [over 40 state and local labor
 boards](https://docs.google.com/spreadsheets/d/1a7XtwA8-Y-1p5kK6sFLwSoNeeQm1FAl4IGB5FZm8oRA/edit#gid=0).
 
 Kate Bronfenbrenner has undertaken the daunting task of collection the
-information about organizing activity from all these
+data about organizing activity from all these
 sources. Twice. The results of her first data collection are presented
 in detail in the 1995 report [*Union organizing in the public sector :
 an analysis of state and local
