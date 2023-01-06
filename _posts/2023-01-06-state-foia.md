@@ -14,7 +14,7 @@ for information about petitions for election, certification elections,
 and representation certifications are the [over 40 state and local labor
 boards](https://docs.google.com/spreadsheets/d/1a7XtwA8-Y-1p5kK6sFLwSoNeeQm1FAl4IGB5FZm8oRA/edit#gid=0).
 
-Kate Bronfenbrenner has undertaken the daunting task of collecting all that
+[Kate Bronfenbrenner](https://www.ilr.cornell.edu/people/kate-bronfenbrenner) has undertaken the daunting task of collecting all that
 data. Twice. The results of her first data collection are presented
 in detail in the 1995 report [*Union organizing in the public sector :
 an analysis of state and local
@@ -31,5 +31,5 @@ see.
 
 I made my [first public records request](https://www.muckrock.com/foi/illinois-168/petitions-election-results-and-certification-of-representations-138559/#) for Illinois, since it the state where I know the public records law best. I'll use Illinois's reponse to refine the request then do a larger batch of requests.
 
-If you have any suggestions for the request, language let me know.
+If you have any suggestions for the request language, let me know.
 
