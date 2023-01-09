@@ -30,7 +30,7 @@ I’m writing this in the [spirit of being wrong on the internet](https://meta.w
 * Dunn and Bradstreet. Very expensive and highly restrictive on re-use
 * OpenCorporates: Still very expensive and highly restrictive on re-use
 * IRS data: Not available for for-profit data without very restrictive access controls. Academic researcher can get access, but the process is difficult and no data republishing is allowed
-* FinCen’s [registry of beneficial ownership](https://www.fincen.gov/news/news-releases/fincen-issues-notice-proposed-rulemaking-regarding-access-beneficial-ownership). No public access.
+* FinCen’s [registry of beneficial ownership](https://www.fincen.gov/news/news-releases/fincen-issues-notice-proposed-rulemaking-regarding-access-beneficial-ownership). No public access. (this one hurts)
 * UNICORE. The AFL-CIO has a database of establishments, firms, and unionization status. I have heard different things about its data quality and whether it is actively maintained. No public access
 
 So, that’s what’s walled off. If we were to try to build a registry from open, public data, these are the data sources we would use.
@@ -38,7 +38,7 @@ So, that’s what’s walled off. If we were to try to build a registry from ope
 ## Partial datasets that we can use to knit something together.
 * [SEC Filings](https://www.sec.gov/edgar/sec-api-documentation): All publicly-traded companies
 * [IRS 990 data](https://www.irs.gov/charities-non-profits/tax-exempt-organization-search-bulk-data-downloads): Nearly all tax-exempt organizations
-* [All the Places](https://www.alltheplaces.xyz/): A OpenStreetMap affiliated project to collect retail establishments.
+* [All the Places](https://www.alltheplaces.xyz/): A OpenStreetMap-affiliated project to collect retail establishments.
 * [State level corporate registrations](https://opencorporates.com/registers)
 * Filings and registrations to regulators for federally regulated industries
 
