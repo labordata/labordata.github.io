@@ -4,8 +4,6 @@ layout: post
 description: What would it take to build a registry of US corporate entiteis
 ---
 
-# Registry of Corporate Firms and Establishments
-
 In 2023, I’m going to be working on organizing data about employers that will be useful to the labor movement. That means things like identifying the employers that repeatedly violate labor law, or employers that have many but not all units organized.
 
 This is going to take a lot of [record linkage](https://en.wikipedia.org/wiki/Record_linkage) within and across datasets. That’s a pain, but I have spent a long time building [good record linkage technology](https://docs.dedupe.io/en/latest/), so I think we can do it.
