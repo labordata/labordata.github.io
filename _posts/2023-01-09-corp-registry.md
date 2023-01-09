@@ -12,7 +12,11 @@ This is going to take a lot of [record linkage](https://en.wikipedia.org/wiki/Re
 
 Unfortunately, it’s also going to mean I’ll have to create unique identifiers for business firms and establishments.
 
-I would really, really like to not be in the business of minting unique identifiers, but in 2023, we don’t have an open registry of firms or establishments that is anywhere near comprehensive.
+I would really, really like to not be in the business of minting unique identifiers. Ideally, there would be an existing registry of coporate filings and establishment, that I could match against and use that registry's identifiers. If that existed, then my work could be linked easily against datasets created by other folks who used the same set of identifiers. 
+
+Without that registry, the identifiers I will mint will be of very limited use for connecting my data to others outside the labordata project. To link other datasets to mine, it will be yet another record linkage problem.
+
+But, in 2023 we don’t have an open registry of firms or establishments that is anywhere near comprehensive, so I will proceed without one. Alack. 
 
 Of course, an open dataset of corporate identifiers could be useful for a ton of goals beyond my own. It’s one of those constant frustrations which, if solved to some satisfaction, could save a lot of people a lot of time. With that in mind, I reached out to [Jeremy Singer-Vine](https://www.jsvine.com/) of the [Data Liberation](https://www.data-liberation-project.org/)  and we’ve been talking about how we would go about it, if we were foolish to build such a registry.
 
@@ -29,7 +33,7 @@ I’m writing this in the [spirit of being wrong on the internet](https://meta.w
 * OpenCorporates: Still very expensive and highly restrictive on re-use
 * IRS data: Not available for for-profit data without very restrictive access controls. Academic researcher can get access, but the process is difficult and no data republishing is allowed
 * FinCen’s [registry of beneficial ownership](https://www.fincen.gov/news/news-releases/fincen-issues-notice-proposed-rulemaking-regarding-access-beneficial-ownership). No public access.
-* UNICORE. The AFL-CIO has a database of establishments, firms, and unionization status. I have heard different things about it’s data quality and whether it is actively maintained. No public access
+* UNICORE. The AFL-CIO has a database of establishments, firms, and unionization status. I have heard different things about its data quality and whether it is actively maintained. No public access
 
 So, that’s what’s walled off. If we were to try to build a registry from open, public data, these are the data sources we would use.
 
