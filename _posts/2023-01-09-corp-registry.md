@@ -44,3 +44,9 @@ So, that’s what’s walled off. If we were to try to build a registry from ope
 
 Please let us know if we are missing something important other datasets or initiatives! If you are interested in helping on something like this, then let us know.
 
+## Addendum
+I've gotten some great suggestions for other data sources
+
+* PPP Loan applications. h/t [Chris Zubak-Skees](https://mastodon.social/@zubakskees)
+* Wikidata. h/t [Chris Zubak-Skees](https://mastodon.social/@zubakskees)
+* Franchise disclosure documents. h/t [Peter Norlander](https://twitter.com/PNorlander)
