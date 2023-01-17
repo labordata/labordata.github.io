@@ -50,3 +50,4 @@ I've gotten some great suggestions for other data sources
 * PPP Loan applications. h/t [Chris Zubak-Skees](https://mastodon.social/@zubakskees)
 * Wikidata. h/t [Chris Zubak-Skees](https://mastodon.social/@zubakskees)
 * Franchise disclosure documents. h/t [Peter Norlander](https://twitter.com/PNorlander)
+* [Legal Entity Identifiers](https://en.wikipedia.org/wiki/Legal_Entity_Identifier). h/t [Maggie Levenshtein](https://twitter.com/MCLevenstein)
