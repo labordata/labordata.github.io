@@ -2,6 +2,7 @@
 title: 2022 Voluntary Recognitions
 layout: post
 description: Voluntary recognitions and older NLRB data
+published: false
 ---
 
 Just got my FOIA back for the voluntary recognitions known to the NLRB
@@ -12,9 +13,9 @@ In 2022, there were [209 voluntary recognitions](https://labordata.bunkum.us/vol
 requirement that voluntary recognitions be reported to the NLRB, and we have no 
 idea about what proportion of voluntary recognitions are ever reported to the NLRB.
 
-That said, in 2022, there were only [193 NLRB
-elections](https://labordata.bunkum.us/nlrb-d6e00cd?sql=select%0D%0A++cast%28strftime%28%27%25Y%27%2C+date_filed%29+as+int%29+as+year%2C%0D%0A++sum%28unit_size%29%2C%0D%0A++count%28filing.case_number%29%0D%0Afrom%0D%0A++filing%0D%0A++inner+join+voting_unit+using+%28case_number%29%0D%0A++inner+join+election+using+%28voting_unit_id%29%0D%0A++inner+join+election_result+using+%28election_id%29%0D%0Awhere%0D%0A++case_type+%3D+%27RC%27%0D%0A++and+year+%3D+2022%0D%0A++and+union_to_certify+is+not+null%0D%0Agroup+by%0D%0A++year)
-that resulted in certified bargaining representative covering 13,617
+That said, in 2022, there were only [315 NLRB
+elections](https://labordata.bunkum.us/nlrb-d6e00cd?sql=select%0D%0A++cast%28strftime%28%27%25Y%27%2C+election.date%29+as+int%29+as+year%2C%0D%0A++sum%28unit_size%29%2C%0D%0A++count%28filing.case_number%29%0D%0Afrom%0D%0A++filing%0D%0A++inner+join+voting_unit+using+%28case_number%29%0D%0A++inner+join+election+using+%28voting_unit_id%29%0D%0A++inner+join+election_result+using+%28election_id%29%0D%0Awhere%0D%0A++case_type+%3D+%27RC%27%0D%0A++and+year+%3D+2022%0D%0A++and+union_to_certify+is+not+null%0D%0Agroup+by%0D%0A++year)
+that resulted in certified bargaining representative covering 28,089
 workers.
 
 Understanding organizating activity outside the NLRB process remains a priority.
