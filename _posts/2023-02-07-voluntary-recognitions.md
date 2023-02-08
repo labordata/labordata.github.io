@@ -22,7 +22,7 @@ Understanding organizing activity outside the NLRB process remains a priority.
 The future of this NLRB data is not certain as [the NLRB is
 considering returning to the previous voluntary recognition bar
 rule](https://www.nlrb.gov/news-outreach/news-story/nlrb-issues-notice-of-proposed-rulemaking-on-fair-choice-and-employee),
-prevents the filing of representation election petition within six
+which prevents the filing of representation election petition within six
 months of a voluntary recognition. In 2020, Trump's NLRB modified the
 rule to require a notice to the NLRB for the rule to take effect along
 with a 45-day period after the receipt of notice when a petition could
