@@ -49,7 +49,9 @@ Labor Cases](https://archive.ciser.cornell.edu/studies/239), [Representation Cas
 
 These records go back to the early 1960s and 1970s, which is fabulous. 
 
-They are also a bit of a mystery. The FOIA officer at the NLRB, who is
+They are also a bit of a mystery. 
+
+The FOIA officer at the NLRB, who is
 very good and very knowledgeable about the agency's information
 systems knows nothing about these data, but the archivist at the
 Cornell Center of Social Sciences confirms that these records came
