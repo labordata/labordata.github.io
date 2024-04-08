@@ -14,7 +14,7 @@ The CHIPS dataset contains information about NLRB cases from
 1984-2000, and with Sean's work we can now quickly see the [top five
 counties for RC cases in those sixteen years](https://labordata.bunkum.us/chips-11c5680?sql=select%0D%0A++county_name+as+county%2C%0D%0A++alpha_state_code+as+state%2C%0D%0A++count%28*%29+as+rc_cases%0D%0Afrom%0D%0A++r_master%0D%0A++inner+join+l_county+on+county+%3D+county_number%0D%0A++and+state+%3D+numeric_state_code%0D%0A++and+ctype+%3D+%27RC%27%0D%0Agroup+by%0D%0A++county_number%2C%0D%0A++numeric_state_code%0D%0Aorder+by%0D%0A++count%28*%29+desc): Cook, IL; Los Angeles, CA; New York; NY; Wayne, MI.
 
-Previously, we had the [address of cases](https://labordata.bunkum.us/chips-11c5680/r_address), so this type of analysis was
+Previously, we had the [addresses of cases](https://labordata.bunkum.us/chips-11c5680/r_address), so this type of analysis was
 possible before, but with much more effort.
 
 ## FMCS FOIA deadend
