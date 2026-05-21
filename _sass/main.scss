@@ -1,23 +1,363 @@
-BODY {
-  max-width: 33em;
-  margin: 30px auto;
-  padding-left: 20px;
-  padding-right: 20px;
-  font-family: 'serif';
-  font-size: 16px;
-      }
+/* Notes on Labor Data — ported from the warehouse (labordata.bunkum.us)
+   styles for visual consistency across the project. */
+
+@import url('https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700;800;900&display=swap');
+
+:root {
+  --paper: #fafaf7;
+  --paper-edge: #ededed;
+  --ink: #15110d;
+  --ink-soft: #3a3a36;
+  --ink-mute: #8a8a8a;
+  --rule: #d4d4d0;
+  --red: #c0023e;
+  --red-deep: #8e0029;
+
+  --display: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --sans-body: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
+  --sans-label: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+/* Page surface ----------------------------------------------------------- */
+
+html, body {
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans-body);
+  font-size: 17px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  max-width: 36em;
+  margin: 0 auto;
+  padding: 0 1.5rem 3rem;
+}
+
+/* Masthead --------------------------------------------------------------- */
+
+.site-header {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  box-shadow: 0 3px 0 var(--paper), 0 4px 0 var(--red);
+  padding: 0.9rem 1.5rem 0.85rem;
+  margin: 0 calc(50% - 50vw) 2rem;
+  padding-inline: max(1.5rem, calc(50vw - 50% + 1.5rem));
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans-label);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.72rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.site-header a,
+.site-header a:link,
+.site-header a:visited {
+  color: var(--ink-soft);
+  text-decoration: none;
+}
+
+.site-header a:hover,
+.site-header a:focus {
+  color: var(--red);
+}
+
+.site-header .site-nav a + a {
+  margin-left: 0.85rem;
+}
+
+/* Headings --------------------------------------------------------------- */
+
+h1, h2 {
+  font-family: var(--display);
+  color: var(--ink);
+  line-height: 1.1;
+  letter-spacing: -0.01em;
+  font-weight: 800;
+  margin: 1.8rem 0 0.5rem;
+  display: inline-block;
+}
+
+h1 {
+  font-size: 2.4rem;
+  margin: 0.4rem 0 0.6rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+h1::after,
+h2::after {
+  content: "";
+  display: block;
+  height: 2px;
+  margin-top: 0.5rem;
+  background: var(--red);
+}
+
+h1::after {
+  width: 3rem;
+  height: 4px;
+}
+
+h2::after {
+  width: 1.75rem;
+}
+
+/* h3 — red sans-uppercase label, matches the warehouse h3 treatment. */
+h3 {
+  font-family: var(--sans-label);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--red);
+  margin: 1.6rem 0 0.5rem;
+}
+
+/* Body prose ------------------------------------------------------------- */
+
+p {
+  margin: 0 0 1rem;
+}
+
+a,
+a:link {
+  color: var(--red-deep);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+a:visited {
+  color: var(--red-deep);
+  opacity: 0.78;
+}
+
+a:hover,
+a:focus,
+a:active {
+  color: var(--red);
+}
+
+ul, ol {
+  padding-left: 1.2rem;
+}
+
+li {
+  margin-bottom: 0.35rem;
+}
+
+blockquote {
+  margin: 1.2rem 0;
+  padding: 0.2rem 1rem;
+  border-left: 3px solid var(--red);
+  color: var(--ink-soft);
+  font-style: italic;
+}
+
+/* Post-meta line (date + permalink) */
+.post-meta,
+.text-muted {
+  color: var(--ink-mute);
+  font-family: var(--sans-label);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin: 0 0 1.5rem;
+}
+
+.post-meta a,
+.text-muted a {
+  color: var(--ink-soft);
+}
+
+/* Tables ----------------------------------------------------------------- */
 
 table {
+  background: #ffffff;
+  border: 1px solid var(--rule);
   border-collapse: collapse;
-  margin-bottom: 1.5em;
+  font-size: 0.92rem;
+  margin: 1rem 0 1.5rem;
+  font-variant-numeric: tabular-nums lining-nums;
+  width: 100%;
 }
 
-th, td {
-  border-bottom: 1px solid #e5e5e5;
-  padding: 0.4em 1.5em 0.4em 0;
+th {
+  background: var(--paper-edge);
+  border-bottom: 2px solid var(--ink);
+  font-family: var(--sans-label);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
   text-align: left;
+  padding: 0.55rem 0.7rem;
+  color: var(--ink);
 }
 
-thead th {
-  border-bottom: 1px solid #c0c0c0;
+td {
+  padding: 0.45rem 0.75rem;
+  border: none;
+}
+
+tbody tr:nth-child(even) td {
+  background: rgba(21, 17, 13, 0.035);
+}
+
+/* Code blocks ----------------------------------------------------------- */
+
+pre, code, kbd, samp {
+  font-family: "Iosevka", "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+  font-size: 0.88rem;
+}
+
+code {
+  background: var(--paper-edge);
+  padding: 0.05em 0.3em;
+}
+
+pre {
+  background: var(--paper-edge);
+  color: var(--ink);
+  border: 1px solid var(--rule);
+  padding: 0.85rem 1rem;
+  overflow-x: auto;
+  margin: 1rem 0 1.5rem;
+}
+
+pre code {
+  background: transparent;
+  padding: 0;
+}
+
+/* Images ---------------------------------------------------------------- */
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Horizontal rules */
+hr {
+  border: none;
+  border-top: 1px solid var(--rule);
+  margin: 2rem 0;
+}
+
+/* Buttondown subscribe form --------------------------------------------- */
+
+.subscribe-form {
+  margin: 2.5rem 0 1rem;
+  padding: 1.25rem 1.5rem 1.5rem;
+  border: 1px solid var(--rule);
+  background: var(--paper-edge);
+}
+
+.subscribe-form h3 {
+  margin: 0 0 0.4rem;
+}
+
+.subscribe-form .subscribe-blurb {
+  margin: 0 0 0.9rem;
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+
+.subscribe-form label {
+  display: block;
+  font-family: var(--sans-label);
+  font-size: 0.78rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 0.3rem;
+}
+
+.subscribe-form input[type=email] {
+  width: 100%;
+  background: #ffffff;
+  border: 1px solid var(--rule);
+  font-family: var(--sans-body);
+  font-size: 1rem;
+  padding: 0.45rem 0.6rem;
+  margin-bottom: 0.75rem;
+  box-sizing: border-box;
+}
+
+.subscribe-form input[type=email]:focus {
+  outline: 2px solid var(--red);
+  outline-offset: 1px;
+  border-color: var(--red);
+}
+
+.subscribe-form button,
+.subscribe-form input[type=submit] {
+  background: var(--ink);
+  color: var(--paper);
+  border: 1px solid var(--ink);
+  border-radius: 0;
+  padding: 0.5rem 1rem;
+  font-family: var(--sans-label);
+  font-size: 0.95rem;
+  line-height: 1;
+  letter-spacing: 0.04em;
+  cursor: pointer;
+}
+
+.subscribe-form button:hover,
+.subscribe-form input[type=submit]:hover {
+  background: var(--red);
+  border-color: var(--red);
+}
+
+/* Footer ---------------------------------------------------------------- */
+
+.site-footer {
+  margin: 3rem calc(50% - 50vw) 0;
+  padding: 1.2rem 1.5rem;
+  padding-inline: max(1.5rem, calc(50vw - 50% + 1.5rem));
+  border-top: 1px solid var(--ink);
+  box-shadow: 0 -3px 0 var(--paper), 0 -4px 0 var(--red);
+  background: var(--paper);
+  font-family: var(--sans-label);
+  font-size: 0.78rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ink-mute);
+  text-align: center;
+}
+
+.site-footer a,
+.site-footer a:link,
+.site-footer a:visited {
+  color: var(--ink-soft);
+}
+
+.site-footer a:hover {
+  color: var(--red);
+}
+
+/* Archive list ---------------------------------------------------------- */
+
+ul.archive-list {
+  list-style: none;
+  padding: 0;
+}
+
+ul.archive-list li {
+  border-bottom: 1px dotted var(--rule);
+  padding: 0.7rem 0;
+  margin: 0;
 }
