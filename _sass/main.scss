@@ -197,6 +197,7 @@ table {
 th {
   background: var(--paper-edge);
   border-bottom: 2px solid var(--ink);
+  border-right: 1px solid var(--rule-soft);
   font-family: var(--sans-label);
   font-size: 0.78rem;
   font-weight: 700;
@@ -207,9 +208,18 @@ th {
   color: var(--ink);
 }
 
+tr th:last-child {
+  border-right: none;
+}
+
 td {
   padding: 0.45rem 0.75rem;
   border: none;
+  border-right: 1px solid var(--rule-soft);
+}
+
+tr td:last-child {
+  border-right: none;
 }
 
 tbody tr:nth-child(even) td {
