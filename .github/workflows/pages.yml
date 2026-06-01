@@ -1,0 +1,71 @@
+name: Build and deploy to GitHub Pages
+
+# Builds the site with a custom Jekyll plugin (_plugins/reactive.rb), which the
+# default GitHub Pages build forbids (it runs Jekyll in --safe mode). So we build
+# it ourselves here and deploy the result.
+#
+# Steps: install Ruby + Node deps, bundle the reactive runtime
+# (assets/js/reactive-runtime.{js,css}, gitignored), then build Jekyll unsafe.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Allow one concurrent deployment; cancel in-progress runs on a new push.
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: "3.2"
+          bundler-cache: true # bundle install + cache gems
+
+      - name: Set up Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: _reactive/package-lock.json
+
+      - name: Install reactive tooling
+        working-directory: _reactive
+        run: npm ci
+
+      - name: Bundle reactive runtime
+        working-directory: _reactive
+        run: npm run build # -> assets/js/reactive-runtime.{js,css}
+
+      - name: Build site (unsafe — enables _plugins)
+        run: bundle exec jekyll build
+        env:
+          JEKYLL_ENV: production
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

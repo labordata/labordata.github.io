@@ -1,16 +1,18 @@
 {
-  "name": "_reactive",
+  "name": "labordata-reactive",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "keywords": [],
-  "author": "",
+  "description": "Build-time tooling for reactive Observable cells in Jekyll posts: a cell transpiler sidecar and a runtime bundler.",
   "license": "ISC",
-  "type": "commonjs",
+  "type": "module",
+  "scripts": {
+    "build": "node bundle-runtime.mjs"
+  },
   "dependencies": {
-    "@observablehq/notebook-kit": "^1.9.1"
+    "@observablehq/inputs": "^0.12.0",
+    "@observablehq/notebook-kit": "^1.9.1",
+    "@observablehq/plot": "^0.6.17"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.0"
   }
 }

@@ -17,9 +17,10 @@ require "json"
 require "open3"
 
 module Reactive
-  # esm.sh resolves notebook-kit's bare-specifier deps (jsDelivr's raw /dist path
-  # does not, so the browser can't load it from there).
-  RUNTIME_CDN = "https://esm.sh/@observablehq/notebook-kit/runtime"
+  # Self-hosted, single-file bundle of the notebook-kit runtime + Plot + Inputs,
+  # with our DOM-aware inspector swapped in. Built by _reactive/bundle-runtime.mjs.
+  # No live third-party dependency at page-load time.
+  RUNTIME = "/assets/js/reactive-runtime.js"
   SIDECAR = File.expand_path("../../_reactive/transpile.mjs", __FILE__)
 
   # match fenced ```js ... ``` blocks
@@ -52,9 +53,7 @@ module Reactive
 
     <<~HTML
       <script type="module">
-      import {define, main} from "#{RUNTIME_CDN}";
-      import * as Plot from "https://cdn.jsdelivr.net/npm/@observablehq/plot@0.6/+esm";
-      import * as Inputs from "https://cdn.jsdelivr.net/npm/@observablehq/inputs/+esm";
+      import {define, main, Plot, Inputs} from "#{RUNTIME}";
       // Register Plot and Inputs as reactive variables so cells that reference
       // them resolve through the dependency graph (they aren't runtime builtins).
       main.variable().define("Plot", [], () => Plot);
