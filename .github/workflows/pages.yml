@@ -45,6 +45,10 @@ jobs:
         working-directory: _reactive
         run: npm ci
 
+      - name: Install Chromium (for chart snapshots)
+        working-directory: _reactive
+        run: npx playwright install --with-deps chromium-headless-shell
+
       - name: Bundle reactive runtime
         working-directory: _reactive
         run: npm run build # -> assets/js/reactive-runtime.{js,css}
@@ -53,6 +57,14 @@ jobs:
         run: bundle exec jekyll build
         env:
           JEKYLL_ENV: production
+
+      - name: Pre-render chart fallbacks + social cards
+        working-directory: _reactive
+        # Loads each reactive post headless, snapshots charts into _site as
+        # static SVG fallbacks (for feeds / no-JS) and a PNG og:image card.
+        run: node snapshot.mjs
+        env:
+          SITE_URL: https://labordata.github.io
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

@@ -6,3 +6,4 @@ _site/
 # Reactive runtime bundle — built in CI by _reactive/bundle-runtime.mjs
 /assets/js/reactive-runtime.js
 /assets/js/reactive-runtime.css
+/assets/snapshots/
