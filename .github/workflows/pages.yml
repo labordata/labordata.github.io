@@ -66,6 +66,18 @@ jobs:
         env:
           SITE_URL: https://labordata.github.io
 
+      - name: Sync to ATmosphere (Standard.Site)
+        working-directory: _atproto
+        # Publishes/updates site.standard.publication + .document records for each
+        # post via @atproto/api. Idempotent. Reads the committed .well-known file.
+        # continue-on-error: syndication is a side-channel — a missing secret or an
+        # AT Protocol hiccup must never block the GitHub Pages deploy.
+        continue-on-error: true
+        run: npm ci && npm run sync
+        env:
+          ATPROTO_PASSWORD: ${{ secrets.ATPROTO_PASSWORD }}
+          CI: "true"
+
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
