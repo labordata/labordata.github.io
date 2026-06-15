@@ -29,7 +29,9 @@ const PUBLICATION_RKEY = "labordata-notes"; // stable, readable publication key
 const PUB_COLLECTION = "site.standard.publication";
 const DOC_COLLECTION = "site.standard.document";
 
-// Jekyll's default permalink for `YYYY-MM-DD-slug.md` is /YYYY/MM/DD/slug.html.
+// Jekyll's default permalink for `YYYY-MM-DD-slug.md` is /YYYY/MM/DD/slug.html,
+// but the live site serves extensionless canonical URLs (/.html 308-redirects to
+// /YYYY/MM/DD/slug), so the record path drops the .html.
 const POST_FILE_RE = /^(\d{4})-(\d{2})-(\d{2})-(.+)\.md$/;
 
 // ---- gather posts -> document records -----------------------------------------
@@ -49,7 +51,7 @@ const parsePosts = async () => {
       title: attributes.title,
       description: attributes.description,
       publishedAt: new Date(Date.UTC(+year, +month - 1, +day)).toISOString(),
-      path: `/${year}/${month}/${day}/${slug}.html`,
+      path: `/${year}/${month}/${day}/${slug}`,
     });
   }
   return docs;
