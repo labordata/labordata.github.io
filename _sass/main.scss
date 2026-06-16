@@ -17,6 +17,13 @@
   --display: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --sans-body: "Geist", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif;
   --sans-label: "Geist", -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Observable Inputs (reactive posts) read these. Without --sans-serif the
+     inputs' `font: 13px/1.2 var(--sans-serif)` declaration is invalid and the
+     controls inherit the 17px body font; mapping it to the site sans restores
+     their intended compact sizing. */
+  --sans-serif: var(--sans-label);
+  --monospace: "Iosevka", "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
 }
 
 /* Page surface ----------------------------------------------------------- */
@@ -32,7 +39,8 @@ html, body {
   padding: 0;
 }
 
-body {
+main {
+  display: block; // ensure block layout for the content column
   max-width: 36em;
   margin: 0 auto;
   padding: 0 1.5rem 3rem;

@@ -1,3 +1,29 @@
 ---
 ---
 @import "main";
+
+.controls{display:flex;flex-wrap:wrap;gap:1.5rem;margin:1rem 0;font-size:.85rem}
+.controls label{display:flex;flex-direction:column;gap:.25rem}
+.controls input[type=range]{width:16rem}
+.controls output{font-variant-numeric:tabular-nums;color:#c0392b}
+figure svg{max-width:100%;height:auto}
+/* Plot wraps legended charts in a <figure>; drop the browser's default 40px
+   side margin so they align flush-left with the bare-SVG (legendless) charts. */
+figure[class*="plot-"]{margin:0}
+
+/* Vertical breathing room around rendered reactive cells (charts, tables,
+   inputs) so they don't butt against each other or surrounding prose. The
+   :not(:empty) skips the invisible data/query cells, which would otherwise add
+   phantom gaps. */
+.reactive-cell:not(:empty){margin:1.75rem 0}
+
+.how-computed{margin:1.5rem 0;padding:.75rem 1rem;background:#f6f6f4;border-left:3px solid #c0392b;font-size:.9rem}
+.how-computed summary{cursor:pointer;font-weight:600;font-style:italic}
+.how-computed p{margin:.6rem 0}
+.how-computed .eq{font-family:Georgia,"Times New Roman",serif;font-size:1.02rem;margin:.5rem 0 .5rem 1rem;line-height:1.6}
+.how-computed code{font-size:.85em}
+
+/* Wide display equations scroll horizontally rather than overflowing the column.
+   padding leaves room for the scrollbar; the negative margin keeps the math
+   visually flush with the text. */
+.katex-display{overflow-x:auto;overflow-y:hidden;padding:.5em 0;margin-inline:-.25rem}
