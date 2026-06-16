@@ -53,11 +53,12 @@ module Reactive
 
     <<~HTML
       <script type="module">
-      import {define, main, Plot, Inputs} from "#{RUNTIME}";
-      // Register Plot and Inputs as reactive variables so cells that reference
-      // them resolve through the dependency graph (they aren't runtime builtins).
+      import {define, main, Plot, Inputs, d3} from "#{RUNTIME}";
+      // Register Plot, Inputs, and d3 as reactive variables so cells that
+      // reference them resolve through the dependency graph (not runtime builtins).
       main.variable().define("Plot", [], () => Plot);
       main.variable().define("Inputs", [], () => Inputs);
+      main.variable().define("d3", [], () => d3);
       #{defs}
       </script>
     HTML

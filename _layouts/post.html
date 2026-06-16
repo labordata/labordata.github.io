@@ -6,6 +6,10 @@
   <meta name="Description" content="{{ page.description }}">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="/assets/css/styles.css">
+  <link rel="stylesheet" href="/assets/katex/katex.min.css">
+  {% if page.reactive %}
+  <link rel="stylesheet" href="/assets/js/reactive-runtime.css">
+  {% endif %}
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="alternate" type="application/atom+xml" title="Notes on Labor Data" href="/feed.xml" />
   <link rel="site.standard.publication" href="at://{{ site.standard_site.did }}/site.standard.publication/{{ site.standard_site.pub_rkey }}">
@@ -37,25 +41,27 @@
     </nav>
   </header>
 
-  <h1>{{ page.title }}</h1>
-  <p class="post-meta">{{ page.date | date: '%B %d, %Y' }}</p>
+  <main>
+    <h1>{{ page.title }}</h1>
+    <p class="post-meta">{{ page.date | date: '%B %d, %Y' }}</p>
 
-  {{ content }}
+    {{ content }}
 
-  <section class="subscribe-form">
-    <h3>Subscribe</h3>
-    <p class="subscribe-blurb">Get Notes on Labor Data as an email newsletter.</p>
-    <form
-      action="https://buttondown.email/api/emails/embed-subscribe/labordata"
-      method="post"
-      target="popupwindow"
-      onsubmit="window.open('https://buttondown.email/labordata', 'popupwindow')"
-    >
-      <label for="bd-email">Email address</label>
-      <input type="email" name="email" id="bd-email" required />
-      <button type="submit">Subscribe</button>
-    </form>
-  </section>
+    <section class="subscribe-form">
+      <h3>Subscribe</h3>
+      <p class="subscribe-blurb">Get Notes on Labor Data as an email newsletter.</p>
+      <form
+        action="https://buttondown.email/api/emails/embed-subscribe/labordata"
+        method="post"
+        target="popupwindow"
+        onsubmit="window.open('https://buttondown.email/labordata', 'popupwindow')"
+      >
+        <label for="bd-email">Email address</label>
+        <input type="email" name="email" id="bd-email" required />
+        <button type="submit">Subscribe</button>
+      </form>
+    </section>
+  </main>
 
   <footer class="site-footer">
     <p>A project of <a rel="me" href="https://bsky.app/profile/bunkum.us">Forest Gregg</a>. Browse the data at <a href="https://labordata.bunkum.us/">labordata.bunkum.us</a>.</p>

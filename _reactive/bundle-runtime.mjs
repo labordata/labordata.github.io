@@ -1,38 +1,35 @@
 #!/usr/bin/env node
-// Bundle the Observable reactive runtime into a single self-hosted ESM file,
-// so reactive posts have NO live third-party dependency at page-load time.
-//
-// Output: assets/js/reactive-runtime.js  (committed, served from our own domain)
-// Exports: define, main (notebook-kit runtime) + Plot, Inputs (for cells to use)
+// Bundle self-hosted browser modules so reactive posts have NO live third-party
+// dependency at page-load time. Outputs (both gitignored, built in CI):
+//   assets/js/reactive-runtime.js  — define, main (notebook-kit) + Plot, Inputs
+//   assets/js/datasette-client.js  — DatasetteClient (with d3-dsv inlined)
 //
 // An esbuild alias swaps notebook-kit's inspect module for our DOM-aware one
 // (_reactive/inspect.js), so display() of a string renders as plain text.
 import {build} from "esbuild";
 import {fileURLToPath} from "node:url";
 import {dirname, join} from "node:path";
+import {cpSync, mkdirSync, readFileSync, writeFileSync} from "node:fs";
 
 const here = dirname(fileURLToPath(import.meta.url));
 const repo = join(here, "..");
-const out = join(repo, "assets", "js", "reactive-runtime.js");
-
-// the module notebook-kit uses for inspection, which we override
-const realInspect = join(here, "node_modules", "@observablehq", "notebook-kit", "dist", "src", "runtime", "inspect.js");
 const ourInspect = join(here, "inspect.js");
 
 // a tiny entry that re-exports exactly what the plugin's generated script imports
-const entry = `
+const runtimeEntry = `
 export {define, main} from "@observablehq/notebook-kit/runtime";
 export * as Plot from "@observablehq/plot";
 export * as Inputs from "@observablehq/inputs";
+export * as d3 from "d3";
 `;
 
+const common = {bundle: true, format: "esm", minify: true, legalComments: "none"};
+
+// 1. the reactive runtime + Plot/Inputs, with our inspector swapped in
 await build({
-  stdin: {contents: entry, resolveDir: here, sourcefile: "reactive-entry.js", loader: "js"},
-  bundle: true,
-  format: "esm",
-  outfile: out,
-  minify: true,
-  legalComments: "none",
+  ...common,
+  stdin: {contents: runtimeEntry, resolveDir: here, sourcefile: "reactive-entry.js", loader: "js"},
+  outfile: join(repo, "assets", "js", "reactive-runtime.js"),
   plugins: [{
     name: "swap-inspector",
     setup(b) {
@@ -47,5 +44,51 @@ await build({
     },
   }],
 });
+console.log("wrote assets/js/reactive-runtime.js");
 
-console.log("wrote", out);
+// 1b. Self-host the Observable Inputs stylesheet. esbuild emits a sidecar
+// reactive-runtime.css whose only real content is a remote @import of the
+// Inputs CSS from jsDelivr — a live page-load dependency, and a version skew
+// risk (the CDN's class hash must match the bundled JS's). Inline the LOCAL
+// inputs/dist/index.css instead: same version as the bundled runtime, so the
+// generated .inputs-<hash>-table classes match, and no third-party fetch.
+// Without this, Inputs.table's `overflow-y:auto` never applies and the table
+// overflows its max-height box, overlapping content below it.
+{
+  const cssPath = join(repo, "assets", "js", "reactive-runtime.css");
+  const inputsCss = readFileSync(
+    join(here, "node_modules", "@observablehq", "inputs", "dist", "index.css"),
+    "utf-8",
+  );
+  const css = readFileSync(cssPath, "utf-8").replace(
+    /@import\s*["']https:\/\/cdn\.jsdelivr\.net\/npm\/@observablehq\/inputs\/dist\/index\.css["'];?/,
+    inputsCss,
+  );
+  writeFileSync(cssPath, css);
+  console.log("wrote assets/js/reactive-runtime.css (inputs CSS inlined)");
+}
+
+// 2. the standalone DatasetteClient (d3-dsv inlined)
+await build({
+  ...common,
+  entryPoints: [join(here, "datasette-client.js")],
+  outfile: join(repo, "assets", "js", "datasette-client.js"),
+});
+console.log("wrote assets/js/datasette-client.js");
+
+// 2b. Tom MacWright's table component, vendored (htl inlined).
+await build({
+  ...common,
+  entryPoints: [join(here, "toms-table.js")],
+  outfile: join(repo, "assets", "js", "toms-table.js"),
+});
+console.log("wrote assets/js/toms-table.js");
+
+// 3. KaTeX stylesheet + fonts, for the build-time-rendered math.
+// The CSS references fonts/ relatively, so they must sit beside it.
+const katexDist = join(here, "node_modules", "katex", "dist");
+const katexOut = join(repo, "assets", "katex");
+mkdirSync(katexOut, {recursive: true});
+cpSync(join(katexDist, "katex.min.css"), join(katexOut, "katex.min.css"));
+cpSync(join(katexDist, "fonts"), join(katexOut, "fonts"), {recursive: true});
+console.log("wrote assets/katex/katex.min.css + fonts");

@@ -77,9 +77,10 @@ async function snapshotPost(page, file, baseUrl) {
   for (let i = 0; i < 80; i++) {
     const n = await page.evaluate(() => document.querySelectorAll(".reactive-cell svg").length);
     stable = n === prev ? stable + 1 : 0;
-    // need at least ~6s elapsed AND 6 stable checks (~3s) — guards against the
-    // mid-render plateau while the NLRB chart is still in flight.
-    if (i >= 12 && stable >= 6) break;
+    // The NLRB charts depend on the DatasetteClient (extra module load + a slow
+    // CSV query), so they can sit at a false plateau for ~8s before appearing.
+    // Require ~14s elapsed AND 8 stable checks (~4s) before declaring it settled.
+    if (i >= 28 && stable >= 8) break;
     prev = n;
     await page.waitForTimeout(500);
   }
