@@ -10,7 +10,7 @@
 // Idempotent: each record is created, updated (only when changed), or skipped.
 // Needs ATPROTO_PASSWORD in the env (local: _atproto/.env; CI: GitHub secret).
 
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { readdir } from "node:fs/promises";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -67,14 +67,43 @@ const THEME = {
   accentForeground: { $type: "site.standard.theme.color#rgb", r: 255, g: 255, b: 255 },
 };
 
-const docRecord = (publicationUri, doc) => ({
+const docRecord = (publicationUri, doc, coverImage) => ({
   $type: DOC_COLLECTION,
   site: publicationUri,
   title: doc.title,
   publishedAt: doc.publishedAt,
   path: doc.path,
   description: doc.description,
+  ...(coverImage ? { coverImage } : {}),
 });
+
+// snapshot.mjs renders a social-card PNG of each reactive post's first chart
+// into the built site at _site/assets/snapshots/<rkey>/card.png (the snapshot
+// slug — the dashed URL path — equals the document rkey). Use it as the
+// Standard.Site coverImage. Runs after snapshot.mjs in CI, so the file is
+// present; locally (no prior build) it's simply absent and we skip it.
+const SITE_DIR = path.join(__dirname, "..", "_site");
+const CARD_MAX_BYTES = 1_000_000; // lexicon caps coverImage at < 1MB
+
+const resolveCover = async (agent, doc, existing) => {
+  const cardPath = path.join(SITE_DIR, "assets", "snapshots", doc.rkey, "card.png");
+  if (!existsSync(cardPath)) return existing?.coverImage; // keep any prior image
+  const bytes = readFileSync(cardPath);
+  if (bytes.length > CARD_MAX_BYTES) {
+    console.warn(
+      `document ${doc.rkey}: card is ${(bytes.length / 1e6).toFixed(2)}MB (> 1MB), skipping coverImage.`,
+    );
+    return existing?.coverImage;
+  }
+  // Reuse the already-uploaded blob unless the card's byte size changed, so an
+  // unchanged chart doesn't churn a new blob + record update every deploy.
+  if (existing?.coverImage?.size === bytes.length) return existing.coverImage;
+  const res = await agent.com.atproto.repo.uploadBlob(new Uint8Array(bytes), {
+    encoding: "image/png",
+  });
+  const { mimeType, ref, size } = res.data.blob;
+  return { $type: "blob", ref: { $link: ref.toString() }, mimeType, size };
+};
 
 const uploadIcon = async (agent) => {
   const bytes = new Uint8Array(readFileSync(path.join(__dirname, "icon.png")));
@@ -145,7 +174,8 @@ const syncDocuments = async (agent, publicationUri, docs) => {
   for (const doc of docs) {
     if (!doc.title || !doc.description) throw new Error(`missing title/description for ${doc.rkey}`);
     const existing = await getRecord(agent, DOC_COLLECTION, doc.rkey);
-    const record = docRecord(publicationUri, doc);
+    const coverImage = await resolveCover(agent, doc, existing);
+    const record = docRecord(publicationUri, doc, coverImage);
 
     if (!existing) {
       await agent.com.atproto.repo.createRecord({
@@ -154,13 +184,14 @@ const syncDocuments = async (agent, publicationUri, docs) => {
         rkey: doc.rkey,
         record,
       });
-      console.log(`document ${doc.rkey} ${doc.path} created.`);
+      console.log(`document ${doc.rkey} ${doc.path} created${coverImage ? " (with card)" : ""}.`);
     } else if (
       existing.title !== record.title ||
       existing.description !== record.description ||
       existing.path !== record.path ||
       existing.site !== record.site ||
-      existing.publishedAt !== record.publishedAt
+      existing.publishedAt !== record.publishedAt ||
+      existing.coverImage?.size !== record.coverImage?.size
     ) {
       await agent.com.atproto.repo.putRecord({
         repo: agent.did,
