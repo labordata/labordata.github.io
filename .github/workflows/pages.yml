@@ -1,11 +1,12 @@
-name: Build and deploy to GitHub Pages
+name: Build and deploy to Cloudflare Pages
 
-# Builds the site with a custom Jekyll plugin (_plugins/reactive.rb), which the
-# default GitHub Pages build forbids (it runs Jekyll in --safe mode). So we build
-# it ourselves here and deploy the result.
-#
-# Steps: install Ruby + Node deps, bundle the reactive runtime
-# (assets/js/reactive-runtime.{js,css}, gitignored), then build Jekyll unsafe.
+# The site is hosted on Cloudflare Pages (labordata-github-io.pages.dev /
+# notes.labordata.bunkum.us). It can't be built by Pages' own git integration:
+# the custom Jekyll plugins (_plugins/reactive.rb, katex.rb) require an --unsafe
+# build, and the reactive runtime is bundled with esbuild + pre-rendered with
+# headless Chromium. So we build the whole thing here and push the finished
+# _site to the Pages project with `wrangler pages deploy` (direct upload — no
+# wrangler.toml). Cloudflare's git auto-build for this project should be off.
 
 on:
   push:
@@ -14,12 +15,10 @@ on:
 
 permissions:
   contents: read
-  pages: write
-  id-token: write
 
-# Allow one concurrent deployment; cancel in-progress runs on a new push.
+# One deploy at a time; cancel an in-progress run when a newer push lands.
 concurrency:
-  group: pages
+  group: deploy
   cancel-in-progress: true
 
 jobs:
@@ -64,32 +63,25 @@ jobs:
         # static SVG fallbacks (for feeds / no-JS) and a PNG og:image card.
         run: node snapshot.mjs
         env:
-          SITE_URL: https://labordata.github.io
+          SITE_URL: https://notes.labordata.bunkum.us
 
       - name: Sync to ATmosphere (Standard.Site)
         working-directory: _atproto
         # Publishes/updates site.standard.publication + .document records for each
         # post via @atproto/api. Idempotent. Reads the committed .well-known file.
         # continue-on-error: syndication is a side-channel — a missing secret or an
-        # AT Protocol hiccup must never block the GitHub Pages deploy.
+        # AT Protocol hiccup must never block the deploy.
         continue-on-error: true
         run: npm ci && npm run sync
         env:
           ATPROTO_PASSWORD: ${{ secrets.ATPROTO_PASSWORD }}
           CI: "true"
 
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
+      - name: Deploy to Cloudflare Pages
+        uses: cloudflare/wrangler-action@v3
         with:
-          path: _site
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          # Direct upload of the prebuilt _site; --branch=main publishes to the
+          # project's production domain.
+          command: pages deploy _site --project-name=labordata-github-io --branch=main
