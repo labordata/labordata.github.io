@@ -166,13 +166,38 @@ display(
 );
 ```
 
+Here is the underlying data behind these charts:
+
+```js
+import { table } from "/assets/js/toms-table.js";
+display(
+  table(
+    crm_market
+      .filter((d) => d.company)
+      .sort((a, b) => b.spend - a.spend)
+      .map((d) => ({
+        Product: d.company,
+        "Local size": d.size,
+        Locals: d.cnt,
+        "Estimated annual spend": d.spend,
+      })),
+    { title: "Estimated CRM market, by product and local size" },
+  ),
+);
+```
+
 ```js
 import { DatasetteClient } from "/assets/js/datasette-client.js";
 const db = new DatasetteClient("https://duckdb-labordata.bunkum.us/opdr");
 ```
 
 ```js
-const crm_market = await db.query`with crm_expenditures as (
+const vendorPattern =
+  "salesforce|aptify|unionware|winmill|union[.]dev|advanced solutions|uniontrack|union track|paragon corp|integrated comp|kmr system|strategic organizing system|john sladkus";
+
+const crm_market = await db.query`
+with matched as (
+  -- disbursements whose payee or purpose names a known CRM vendor
   SELECT
     name,
     purpose,
@@ -184,28 +209,13 @@ const crm_market = await db.query`with crm_expenditures as (
   WHERE
     payer_payee_type = 1002
     and (
-      name LIKE '%salesforce%'
-      OR name LIKE '%aptify%'
-      OR name LIKE '%unionware%'
-      OR name LIKE '%winmill%'
-      OR name LIKE '%union.dev%'
-      OR name LIKE '%advanced solutions%'
-      OR name LIKE '%uniontrack%'
-      OR name LIKE '%union track%'
-      OR name LIKE '%paragon corp%'
-      OR name LIKE '%INTEGRATED COMP%'
+      regexp_matches(lower(name), ${vendorPattern})
       OR lower(name) = 'incom'
-      OR name LIKE '%kmr system%'
-      OR name LIKE '%strategic organizing system%'
-      or name like '%john sladkus%'
-      OR purpose LIKE '%salesforce%'
-      OR purpose LIKE '%unionware%'
-      OR purpose LIKE '%aptify%'
+      OR regexp_matches(lower(purpose), 'salesforce|unionware|aptify|uniontrack')
       OR (
-        purpose like '%IMIS%'
-        and purpose not like '%ADIMIS%'
+        regexp_matches(lower(purpose), 'imis')
+        and not regexp_matches(lower(purpose), 'adimis')
       )
-      OR purpose LIKE '%UNIONTRACK%'
     )
   UNION ALL
   SELECT
@@ -216,42 +226,39 @@ const crm_market = await db.query`with crm_expenditures as (
   FROM
     ar_disbursements_inv_purchases
   WHERE
-    (
-      description LIKE '%salesforce%'
-      OR description LIKE '%aptify%'
-      OR description LIKE '%unionware%'
-      OR description LIKE '%winmill%'
-      OR description LIKE '%union.dev%'
-      OR description LIKE '%advanced solutions%'
-      OR description LIKE '%uniontrack%'
-      OR description LIKE '%union track%'
-      OR description LIKE '%paragon corp%'
-      OR description LIKE '%INTEGRATED COMP%'
-      OR lower(description) = 'incom'
-      OR description LIKE '%kmr system%'
-      OR description LIKE '%strategic organizing system%'
-      or description like '%john sladkus%'
-    )
+    regexp_matches(lower(description), ${vendorPattern})
+    OR lower(description) = 'incom'
 ),
-ranked as (
+most_recent as (
+  -- attribute each expenditure to a vendor, keeping only each local's most
+  -- recent filing (highest spend breaks ties)
   SELECT
-    f_num,
     members,
-    name,
-    purpose,
     amount,
+    CASE
+      WHEN regexp_matches(lower(purpose), 'salesforce') OR regexp_matches(lower(name), 'salesforce') THEN 'SalesForce'
+      WHEN regexp_matches(lower(purpose), 'unionware') OR regexp_matches(lower(name), 'unionware') THEN 'UnionWare'
+      WHEN regexp_matches(lower(name), 'winmill') THEN 'eMembership'
+      WHEN regexp_matches(lower(name), 'union[.]dev') THEN 'union.dev'
+      WHEN regexp_matches(lower(purpose), 'imis') OR regexp_matches(lower(name), 'advanced solutions') THEN 'iMIS'
+      WHEN regexp_matches(lower(purpose), 'uniontrack') OR regexp_matches(lower(name), 'uniontrack') OR regexp_matches(lower(name), 'union track') THEN 'UnionTrack'
+      WHEN regexp_matches(lower(name), 'paragon corp') THEN 'MemTrack'
+      WHEN regexp_matches(lower(name), 'integrated comp') OR lower(name) = 'incom' THEN 'MTP'
+      WHEN regexp_matches(lower(name), 'kmr system') THEN 'KMR Systems'
+      WHEN regexp_matches(lower(name), 'strategic organizing system') OR regexp_matches(lower(name), 'john sladkus') THEN 'Strategic Organizing System'
+      WHEN regexp_matches(lower(purpose), 'aptify') OR regexp_matches(lower(name), 'aptify') THEN 'Aptify'
+    END AS company
+  FROM
+    matched
+    inner join lm_data using (rpt_id)
+  WHERE
+    pd_covered_from >= '2010-01-01'
+    AND desig_name = 'LU'
+  QUALIFY
     row_number() OVER (
       PARTITION BY f_num
-      ORDER BY
-        pd_covered_from DESC,
-        amount desc
-    ) AS rnk
-  from
-    crm_expenditures
-    inner join lm_data using (rpt_id)
-  where
-    pd_covered_from >= '2010'
-    AND desig_name = 'LU'
+      ORDER BY pd_covered_from DESC, amount DESC
+    ) = 1
 )
 SELECT
   CASE
@@ -259,35 +266,9 @@ SELECT
     WHEN members < 10000 THEN 'medium'
     WHEN members >= 10000 THEN 'large'
   END as size,
-  CASE
-    WHEN purpose like '%salesforce%'
-    OR name LIKE '%salesforce%' THEN 'SalesForce'
-    WHEN purpose like '%unionware%'
-    OR name LIKE '%unionware%' THEN 'UnionWare'
-    WHEN name LIKE '%winmill%' THEN 'eMembership'
-    WHEN name LIKE '%union.dev%' THEN 'union.dev'
-    WHEN purpose like '%IMIS%'
-    OR name LIKE '%advanced solutions%' THEN 'iMIS'
-    WHEN purpose like '%uniontrack%'
-    OR name LIKE '%uniontrack%'
-    OR name LIKE '%union track%' THEN 'UnionTrack'
-    WHEN name LIKE '%paragon corp%' THEN 'MemTrack'
-    WHEN name LIKE '%INTEGRATED COMP%'
-    OR lower(name) = 'incom' THEN 'MTP'
-    WHEN name LIKE '%kmr system%' THEN 'KMR Systems'
-    WHEN name LIKE '%strategic organizing system%'
-    or name like '%john sladkus%' THEN 'Strategic Organizing System'
-    WHEN purpose like '%aptify%'
-    OR name LIKE '%aptify%' THEN 'Aptify'
-    ELSE NULL
-  END AS company,
+  company,
   count(*) as cnt,
   sum(amount) as spend
-FROM
-  ranked
-WHERE
-  rnk = 1
-GROUP BY
-  size,
-  company`;
+FROM most_recent
+GROUP BY size, company`;
 ```
