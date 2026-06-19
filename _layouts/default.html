@@ -7,6 +7,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="stylesheet" href="/assets/css/styles.css">
   <link rel="stylesheet" href="/assets/katex/katex.min.css">
+  {% comment %} The index renders the latest post inline; if it's reactive, pull in
+  the input styles so its controls read distinctly from prose, as on post pages.
+  Scoped to the index so other default-layout pages (e.g. the archive) don't load it. {% endcomment %}
+  {% if page.reactive or page.url == '/' and site.posts.first.reactive %}
+  <link rel="stylesheet" href="/assets/js/reactive-runtime.css">
+  {% endif %}
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
   <link rel="alternate" type="application/atom+xml" title="Notes on Labor Data" href="/feed.xml" />
   <link rel="site.standard.publication" href="at://{{ site.standard_site.did }}/site.standard.publication/{{ site.standard_site.pub_rkey }}">

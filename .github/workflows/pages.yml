@@ -11,6 +11,12 @@ name: Build and deploy to Cloudflare Pages
 on:
   push:
     branches: [main]
+  schedule:
+    # Nightly (~3am US Eastern) rebuild to refresh baked snapshot values for
+    # dynamic notebooks (live data). The snapshot step runs with
+    # SNAPSHOT_NO_CACHE so it re-renders every post against current data instead
+    # of reusing content-hashed values.
+    - cron: "0 8 * * *"
   workflow_dispatch:
 
 permissions:
@@ -57,6 +63,17 @@ jobs:
         env:
           JEKYLL_ENV: production
 
+      - name: Cache chart snapshots
+        # Persist rendered SVG/PNG snapshots + manifest across runs so the
+        # snapshot step only re-renders posts whose built HTML changed.
+        uses: actions/cache@v4
+        with:
+          path: .snapshot-cache
+          # Run-unique key so every build saves a new cache (incl. the nightly's
+          # freshly-rendered values); restore-keys picks up the most recent.
+          key: snapshots-${{ github.run_id }}
+          restore-keys: snapshots-
+
       - name: Pre-render chart fallbacks + social cards
         working-directory: _reactive
         # Loads each reactive post headless, snapshots charts into _site as
@@ -64,6 +81,9 @@ jobs:
         run: node snapshot.mjs
         env:
           SITE_URL: https://notes.labordata.bunkum.us
+          # Nightly schedule: ignore the cache and re-render every post so
+          # dynamic (live-data) notebooks get fresh baked values.
+          SNAPSHOT_NO_CACHE: ${{ github.event_name == 'schedule' && '1' || '' }}
 
       - name: Sync to ATmosphere (Standard.Site)
         working-directory: _atproto
