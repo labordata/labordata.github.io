@@ -52,7 +52,7 @@ const SITE_URL = process.env.SITE_URL || "https://notes.labordata.bunkum.us";
 // .snapshot-cache, persisted across CI runs. A post is re-rendered only when its
 // built HTML changes; otherwise the cached artifacts are reused. Bump VERSION to
 // force a rebuild.
-const SNAPSHOT_VERSION = "3";
+const SNAPSHOT_VERSION = "4";
 const cacheDir = join(repo, ".snapshot-cache");
 const manifestPath = join(cacheDir, "manifest.json");
 const manifest = existsSync(manifestPath)

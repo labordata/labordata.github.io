@@ -22,6 +22,11 @@ export class DatasetteClient {
     const search = new URLSearchParams();
     search.append("sql", sql);
     if (params) for (const key in params) search.append(key, params[key]);
+    // Datasette caps results at max_returned_rows (default 1000) unless we
+    // stream. CSV is the only export that streams the full result set, so
+    // request it for csv queries — otherwise long results are silently
+    // truncated (e.g. a multi-year line chart loses all but the first year).
+    if (type === "csv") search.append("_stream", "on");
     return `${this.baseUrl}.${type}?${search.toString()}`;
   }
 
