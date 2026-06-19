@@ -140,7 +140,7 @@ and use a July to June fiscal years; the rest of the data uses a calendar year.
 
 ```js
 import { DatasetteClient } from "/assets/js/datasette-client.js";
-const db = new DatasetteClient("https://duckdb-labordata.bunkum.us/_memory");
+const db = new DatasetteClient("https://labordata.bunkum.us/_memory");
 const last_year = 2024;
 const margin = 33;
 ```

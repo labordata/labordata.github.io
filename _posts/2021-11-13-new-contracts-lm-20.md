@@ -95,7 +95,7 @@ data to that, though.
 
 ```js
 import { DatasetteClient } from "/assets/js/datasette-client.js";
-const db = new DatasetteClient("https://duckdb-labordata.bunkum.us/lm20");
+const db = new DatasetteClient("https://labordata.bunkum.us/lm20");
 const last_year = new Date().getFullYear() - 1;
 ```
 

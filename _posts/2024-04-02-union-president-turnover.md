@@ -178,7 +178,7 @@ correlate with:
 ```js
 import { regressionLoess } from "https://cdn.jsdelivr.net/npm/d3-regression@1/+esm";
 import { DatasetteClient } from "/assets/js/datasette-client.js";
-const db = new DatasetteClient("https://duckdb-labordata.bunkum.us/opdr");
+const db = new DatasetteClient("https://labordata.bunkum.us/opdr");
 ```
 
 ```js
