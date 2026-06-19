@@ -72,7 +72,7 @@ display(
 
 ```js
 import { DatasetteClient } from "/assets/js/datasette-client.js";
-const db = new DatasetteClient("https://duckdb-labordata.bunkum.us/nlrb");
+const db = new DatasetteClient("https://labordata.bunkum.us/nlrb");
 ```
 
 ```js

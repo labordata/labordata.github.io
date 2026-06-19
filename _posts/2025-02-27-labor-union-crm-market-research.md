@@ -188,7 +188,7 @@ display(
 
 ```js
 import { DatasetteClient } from "/assets/js/datasette-client.js";
-const db = new DatasetteClient("https://duckdb-labordata.bunkum.us/opdr");
+const db = new DatasetteClient("https://labordata.bunkum.us/opdr");
 ```
 
 ```js
