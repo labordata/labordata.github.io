@@ -124,6 +124,26 @@ h2::after {
   width: 1.75rem;
 }
 
+/* Heading anchor links (reactive posts inject these). Hidden until the
+   heading is hovered or the link itself is focused via keyboard. */
+.header-anchor {
+  margin-left: 0.3em;
+  color: var(--ink-mute);
+  text-decoration: none;
+  opacity: 0;
+  transition: opacity 0.15s ease;
+}
+
+h1:hover .header-anchor,
+h2:hover .header-anchor,
+.header-anchor:focus {
+  opacity: 1;
+}
+
+.header-anchor:hover {
+  color: var(--red);
+}
+
 /* h3 — red sans-uppercase label, matches the warehouse h3 treatment. */
 h3 {
   font-family: var(--sans-label);
