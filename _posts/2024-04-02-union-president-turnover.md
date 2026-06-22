@@ -54,14 +54,22 @@ const sizeLoess = regressionLoess()
 display(
   Plot.plot({
     y: { label: "Changes in presidents per decade" },
-    x: { tickFormat: (x) => 10 ** x, ticks: 5, label: "Members in local (log scale)" },
+    x: {
+      tickFormat: (x) => 10 ** x,
+      ticks: 5,
+      label: "Members in local (log scale)",
+    },
     caption: "Turnover by Size of Local Union",
     marks: [
       Plot.rect(
         local_unions,
         Plot.bin(
           { fillOpacity: "count" },
-          { x: (d) => Math.log10(d.members), y: "turn_over_rate", fill: "lightblue" },
+          {
+            x: (d) => Math.log10(d.members),
+            y: "turn_over_rate",
+            fill: "lightblue",
+          },
         ),
       ),
       Plot.line(sizeLoess, { x: (d) => d[0], y: (d) => d[1] }),
@@ -94,7 +102,11 @@ display(
         local_unions_post_70,
         Plot.bin(
           { fillOpacity: "count" },
-          { x: (d) => d3.utcParse("%Y")(d.est_year), y: "turn_over_rate", fill: "lightblue" },
+          {
+            x: (d) => d3.utcParse("%Y")(d.est_year),
+            y: "turn_over_rate",
+            fill: "lightblue",
+          },
         ),
       ),
       Plot.line(ageLoess, { x: (d) => d[0], y: (d) => d[1] }),
@@ -166,7 +178,7 @@ versus many years of complete continuity and then a sudden change.
 | 2 | alice   | bob | candice |
 | 3 | dawn | earl | frank |
 
-Second, [Dave Kamper](https://twitter.com/dskamper) suggested that turnover should
+Second, [Dave Kamper](https://bsky.app/profile/dskamper.bsky.social) suggested that turnover should
 correlate with:
 - salary of president (I bet this correlates strongly with size of union)
 - whether the local has paid staff
