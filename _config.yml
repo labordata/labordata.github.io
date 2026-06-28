@@ -1,3 +1,5 @@
+url: https://labordata.github.io
+
 plugins:
   - jekyll-feed
 
