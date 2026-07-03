@@ -1,5 +1,9 @@
 url: https://labordata.github.io
 
+author:
+  name: Forest Gregg
+  uri: https://bunkum.us/
+
 plugins:
   - jekyll-feed
 

@@ -29,6 +29,29 @@
   {% if page.description %}
     <meta name="twitter:description" content="{{ page.description }}">
   {% endif %}
+
+  <meta name="author" content="Forest Gregg">
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": {{ page.title | jsonify }},
+    "url": "{{ site.url }}{{ page.url }}",
+    {% if page.date %}"datePublished": "{{ page.date | date_to_xmlschema }}",{% endif %}
+    {% if page.description %}"description": {{ page.description | jsonify }},{% endif %}
+    "author": {
+      "@type": "Person",
+      "@id": "https://orcid.org/0009-0001-8330-9219",
+      "name": "Forest Gregg",
+      "url": "https://bunkum.us/"
+    },
+    "publisher": {
+      "@type": "Person",
+      "@id": "https://orcid.org/0009-0001-8330-9219",
+      "name": "Forest Gregg"
+    }
+  }
+  </script>
 </head>
 <body>
   <header class="site-header">
