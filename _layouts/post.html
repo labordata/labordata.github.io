@@ -23,8 +23,8 @@
   {% else %}
     <meta name="twitter:title" content="{{ site.title }}">
   {% endif %}
-  {% if page.url %}
-    <meta name="twitter:url" content="{{ site.url }}{{ page.url }}">
+  {% if page.id %}
+    <meta name="twitter:url" content="{{ site.url }}{{ page.id }}">
   {% endif %}
   {% if page.description %}
     <meta name="twitter:description" content="{{ page.description }}">
@@ -36,7 +36,7 @@
     "@context": "https://schema.org",
     "@type": "BlogPosting",
     "headline": {{ page.title | jsonify }},
-    "url": "{{ site.url }}{{ page.url }}",
+    "url": "{{ site.url }}{{ page.id }}",
     {% if page.date %}"datePublished": "{{ page.date | date_to_xmlschema }}",{% endif %}
     {% if page.description %}"description": {{ page.description | jsonify }},{% endif %}
     "author": {
