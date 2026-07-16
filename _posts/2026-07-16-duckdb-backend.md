@@ -1,3 +1,9 @@
+---
+title: DuckDB backend for labordata
+layout: post
+description: Clearer queries on labordata, and 10-50 times faster
+---
+
 Last month, I switched the backend database for labordata from
 [SQLite](https://en.wikipedia.org/wiki/SQLite) to
 [DuckDB](https://en.wikipedia.org/wiki/DuckDB) for clearer and faster queries.
