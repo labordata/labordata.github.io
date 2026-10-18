@@ -131,8 +131,7 @@ system](https://labordata.bunkum.us/cats) (1999-2010), and the [CHIPS
 system](https://labordata.bunkum.us/chips) (1984-2000), [data on representation
 elections from 1965-1998 compiled by the
 AFL-CIO](https://labordata.bunkum.us/nlrb_rc_elections_1961_1998) c/o [JP
-Ferguson](https://github.com/jpfergongithub/nlrb_old_rcases). The year 1999 is
-excluded because of data artifacts due to the transition between data systems.
+Ferguson](https://github.com/jpfergongithub/nlrb_old_rcases).
 
 About 5,000 cases in the 1961-1998 data, mostly closed in 1982, have no filing
 date. Since the NLRB assigns docket numbers in order within each region and
@@ -454,7 +453,6 @@ from
 where
   year between 1965
   and cast(${last_year} as int)
-  and year != 1999
   and case_type = 'RC'
 group by
   year
