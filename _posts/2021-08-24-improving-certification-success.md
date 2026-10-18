@@ -134,6 +134,11 @@ AFL-CIO](https://labordata.bunkum.us/nlrb_rc_elections_1961_1998) c/o [JP
 Ferguson](https://github.com/jpfergongithub/nlrb_old_rcases). The year 1999 is
 excluded because of data artifacts due to the transition between data systems.
 
+About 5,000 cases in the 1961-1998 data, mostly closed in 1982, have no filing
+date. Since the NLRB assigns docket numbers in order within each region and
+case type, I interpolate their filing dates from the nearest dated cases by
+docket number.
+
 The number of RC cases filed from 1965-1998 is compiled from [NLRB Annual
 reports](https://www.nlrb.gov/reports/agency-performance-reports/historical-reports/annual-reports)
 and use a July to June fiscal years; the rest of the data uses a calendar year.
@@ -179,6 +184,53 @@ cats_single_participant as (
   from
     cats.r_elect_votes_for qualify count(*) over (partition by election_id, tally_id) = 1
 ),
+-- Old NLRB data with each case's nearest dated neighbors by docket number.
+-- Dockets are assigned sequentially within a region and case type, so the
+-- neighbors bracket when an undated case was filed.
+old_r_neighbors as (
+  select
+    *,
+    last_value(if(filed_date is not null, docket, null) ignore nulls) over preceding_cases as prev_docket,
+    last_value(filed_date ignore nulls) over preceding_cases as prev_filed_date,
+    first_value(if(filed_date is not null, docket, null) ignore nulls) over following_cases as next_docket,
+    first_value(filed_date ignore nulls) over following_cases as next_filed_date
+  from
+    nlrb_rc_elections_1961_1998.nlrb_representation_1961_1998
+  window
+    preceding_cases as (
+      partition by region, r_type
+      order by docket
+      rows between unbounded preceding and current row
+    ),
+    following_cases as (
+      partition by region, r_type
+      order by docket
+      rows between current row and unbounded following
+    )
+),
+-- About 5,000 cases, mostly closed in 1982, have no filing date. Interpolate
+-- one linearly by docket number between the dated neighbors.
+old_r as (
+  select
+    *,
+    coalesce(
+      filed_date,
+      case
+        when prev_docket is not null
+        and next_docket is not null
+        and next_docket != prev_docket then prev_filed_date + cast(
+          round(
+            (docket - prev_docket) * datediff('day', prev_filed_date, next_filed_date) / (next_docket - prev_docket)
+          ) as int
+        )
+      end,
+      prev_filed_date,
+      next_filed_date,
+      election_date
+    ) as imputed_filed_date
+  from
+    old_r_neighbors
+),
 combined as (
   -- Old NLRB representation data (1961-1998)
   select
@@ -191,9 +243,9 @@ combined as (
     incumb_un > 0
     and incumb_un is not null as incumbent,
     sec_union is null as single_union,
-    year(coalesce(filed_date, election_date)) as year
+    year(imputed_filed_date) as year
   from
-    nlrb_rc_elections_1961_1998.nlrb_representation_1961_1998
+    old_r
   union all
     -- CHIPS
   select
