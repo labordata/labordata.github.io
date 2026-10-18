@@ -140,9 +140,10 @@ case type, I interpolate their filing dates from the nearest dated cases by
 docket number.
 
 The number of RC cases filed from 1965-1983 is compiled from [NLRB Annual
-reports](https://www.nlrb.gov/reports/agency-performance-reports/historical-reports/annual-reports)
-and uses the NLRB's fiscal years (July to June through 1976, October to
-September after); the rest of the data uses a calendar year.
+reports](https://www.nlrb.gov/reports/agency-performance-reports/historical-reports/annual-reports).
+All years are NLRB fiscal years of filing, to match the annual reports: July to
+June through 1976, and October to September after. Cases filed in the July to
+September 1976 transition quarter are left out.
 
 Single-union elections are elections with only one union on the ballot.
 Petitions consolidated into one election count as one election, though each
@@ -263,7 +264,7 @@ combined as (
     -- source-prefixed so min() below prefers a real grouping over the old
     -- file's one-case groups
     'old:' || printf('%02d-%s-%06d', region, r_type, docket) as consolidation_group,
-    year(imputed_filed_date) as year
+    imputed_filed_date as filed_date
   from
     old_r
   union all
@@ -291,7 +292,7 @@ combined as (
     rc_elect.date_election_held as election_date,
     -- consolidated petitions point at their lead case
     'chips:' || coalesce(nullif(consol_case_number, ''), case_number) as consolidation_group,
-    year(file_date) as year
+    file_date as filed_date
   from
     chips.r_master
     left join chips.rc_elect using (case_number)
@@ -312,7 +313,7 @@ combined as (
     single.r_case_number is not null as single_union,
     r_election.date_election as election_date,
     'cats:' || coalesce(r_case_case_group.r_case_group_id, r_case.r_case_number) as consolidation_group,
-    year(date_filed) as year
+    date_filed as filed_date
   from
     cats.r_case
     left join cats.r_election_tally using (r_case_number)
@@ -337,7 +338,7 @@ combined as (
     ballot_type = 'Single Labor Organization' as single_union,
     election.date as election_date,
     'nlrb:' || coalesce(filing_group.root_case_number, filing.case_number) as consolidation_group,
-    year(date_filed) as year
+    date_filed as filed_date
   from
     nlrb.filing
     left join nlrb.voting_unit using (case_number)
@@ -360,11 +361,25 @@ completions as (
     min(employees_in_unit) as employees_in_unit,
     min(election_date) as election_date,
     min(consolidation_group) as consolidation_group,
-    min(year) as year
+    min(filed_date) as filed_date
   from
     combined
   group by
     case_number
+),
+-- Tally by NLRB fiscal year of filing, to match the annual reports: July to
+-- June through June 1976, then October to September. The July-September 1976
+-- transition quarter belongs to no fiscal year and is left out.
+fiscal_years as (
+  select
+    *,
+    case
+      when filed_date < date '1976-07-01' then year(filed_date + interval 6 month)
+      when filed_date < date '1976-10-01' then null
+      else year(filed_date + interval 3 month)
+    end as year
+  from
+    completions
 ),
 -- Consolidated petitions often carry a copy of the same election. Count one
 -- election per consolidation group, election date, and unit size; every
@@ -377,7 +392,7 @@ distinct_elections as (
       order by case_number
     ) = 1 as distinct_election
   from
-    completions
+    fiscal_years
 )
 select
   year,
